@@ -11,6 +11,7 @@ namespace PolderKnowledge\ApigilityClient;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\GuzzleException;
 use Lukasoppermann\Httpstatus\Httpstatuscodes;
 use PolderKnowledge\ApigilityClient\Validation\Exception as ValidationException;
 use Psr\Http\Message\RequestInterface;
@@ -37,7 +38,11 @@ final class Client
                 case Httpstatuscodes::HTTP_UNPROCESSABLE_ENTITY:
                     $content = $e->getResponse()->getBody()->getContents();
                     throw ValidationException::createFromResponseContent($content, $e);
+                default:
+                    throw new GenericException($e->getMessage(), $e->getCode(), $e);
             }
+        } catch (GuzzleException $e) {
+            throw new GenericException($e->getMessage(), $e->getCode(), $e);
         }
     }
 }

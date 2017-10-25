@@ -11,6 +11,7 @@ namespace PolderKnowledge\ApigilityClient;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
@@ -45,5 +46,44 @@ class ClientTest extends TestCase
         }
 
         static::fail('Did\'t catch any expected exception');
+    }
+
+    /**
+     * @expectedException \PolderKnowledge\ApigilityClient\GenericException
+     */
+    public function testUnknownErrorCodeHandling()
+    {
+        $request = new Request('get', 'message');
+
+        $httpClient = static::createMock(ClientInterface::class);
+        $httpClient->expects(static::once())
+            ->method('send')
+            ->willThrowException(
+                new BadResponseException(
+                    'Message',
+                    new Request('post', '/url'),
+                    new Response(418, [], 'some body')
+                ));
+
+        $client = new Client($httpClient);
+        $client->send($request);
+    }
+
+    /**
+     * @expectedException \PolderKnowledge\ApigilityClient\GenericException
+     */
+    public function testUnknownGuzzleException()
+    {
+        $request = new Request('get', 'message');
+
+        $httpClient = static::createMock(ClientInterface::class);
+        $httpClient->expects(static::once())
+            ->method('send')
+            ->willThrowException(
+                new class extends \RuntimeException implements GuzzleException {}
+            );
+
+        $client = new Client($httpClient);
+        $client->send($request);
     }
 }
