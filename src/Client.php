@@ -38,6 +38,8 @@ final class Client
                 case Httpstatuscodes::HTTP_UNPROCESSABLE_ENTITY:
                     $content = $e->getResponse()->getBody()->getContents();
                     throw ValidationException::createFromResponseContent($content, $e);
+                case Httpstatuscodes::HTTP_FORBIDDEN:
+                    throw new ForbiddenException('Forbidden', $e->getCode(), $e);
                 default:
                     throw new GenericException($e->getMessage(), $e->getCode(), $e);
             }

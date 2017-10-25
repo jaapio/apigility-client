@@ -86,4 +86,25 @@ class ClientTest extends TestCase
         $client = new Client($httpClient);
         $client->send($request);
     }
+
+    /**
+     * @expectedException \PolderKnowledge\ApigilityClient\ForbiddenException
+     */
+    public function testForbiddenException()
+    {
+        $request = new Request('get', 'message');
+
+        $httpClient = static::createMock(ClientInterface::class);
+        $httpClient->expects(static::once())
+            ->method('send')
+            ->willThrowException(
+                new BadResponseException(
+                    'Message',
+                    new Request('post', '/url'),
+                    new Response(403, [], 'some body')
+                ));
+
+        $client = new Client($httpClient);
+        $client->send($request);
+    }
 }
