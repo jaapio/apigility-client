@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ruleset name="polderknowledge/apigilityclient">
+    <description>The coding standards of polderknowledge/apigilityclient</description>
+
+    <rule ref="vendor/polderknowledge/coding-standards/PolderKnowledge/ruleset.xml">
+    </rule>
+</ruleset>
