@@ -4,7 +4,7 @@
 namespace PolderKnowledge\ApigilityClient;
 
 
-final class GenericException extends \RuntimeException
+final class GenericException extends \RuntimeException implements ClientException
 {
 
 }

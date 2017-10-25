@@ -11,8 +11,9 @@ namespace PolderKnowledge\ApigilityClient\Validation;
 
 use GuzzleHttp\Exception\BadResponseException;
 use Lukasoppermann\Httpstatus\Httpstatuscodes;
+use PolderKnowledge\ApigilityClient\ClientException;
 
-final class Exception extends \RuntimeException
+final class Exception extends \RuntimeException implements ClientException
 {
     /**
      * @var array[string, Violation[]]
